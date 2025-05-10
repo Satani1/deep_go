@@ -10,7 +10,14 @@ import (
 // go test -v homework_test.go
 
 type OrderedMap struct {
-	// need to implement
+	root *Node
+	size int
+}
+
+type Node struct {
+	key         int
+	value       int
+	left, right *Node
 }
 
 func NewOrderedMap() OrderedMap {
@@ -18,23 +25,109 @@ func NewOrderedMap() OrderedMap {
 }
 
 func (m *OrderedMap) Insert(key, value int) {
-	// need to implement
+	m.root = m.insert(key, value, m.root)
 }
 
+func (m *OrderedMap) insert(key, value int, node *Node) *Node {
+	if node == nil {
+		m.size++
+		return &Node{key: key, value: value}
+	}
+
+	if key < node.key {
+		node.left = m.insert(key, value, node.left)
+	}
+
+	if key > node.key {
+		node.right = m.insert(key, value, node.right)
+	}
+
+	node.value = value
+	return node
+}
 func (m *OrderedMap) Erase(key int) {
-	// need to implement
+	m.root = m.deleteNode(key, m.root)
+}
+
+func (m *OrderedMap) deleteNode(key int, node *Node) *Node {
+	if node == nil {
+		return nil
+	}
+
+	if key < node.key {
+		node.left = m.deleteNode(key, node.left)
+
+		return node
+	}
+
+	if key > node.key {
+		node.right = m.deleteNode(key, node.right)
+
+		return node
+	}
+
+	m.size--
+
+	if node.left == nil {
+		return node.right
+	}
+
+	if node.right == nil {
+		return node.left
+	}
+
+	child := node.right
+	for child.left != nil {
+		child = child.left
+	}
+
+	child.left = node.left
+	child.right = node.right
+	node = child
+
+	return node
 }
 
 func (m *OrderedMap) Contains(key int) bool {
-	return false // need to implement
+	return contains(key, m.root)
+}
+
+func contains(key int, node *Node) bool {
+	if node == nil {
+		return false
+	}
+
+	if key < node.key {
+		return contains(key, node.left)
+	}
+
+	if key > node.key {
+		return contains(key, node.right)
+	}
+
+	return true
 }
 
 func (m *OrderedMap) Size() int {
-	return 0 // need to implement
+	return m.size
 }
 
 func (m *OrderedMap) ForEach(action func(int, int)) {
-	// need to implement
+	if m.root != nil {
+		forEach(action, m.root)
+	}
+}
+
+func forEach(action func(int, int), node *Node) {
+	if node.left != nil {
+		forEach(action, node.left)
+	}
+
+	action(node.key, node.value)
+
+	if node.right != nil {
+		forEach(action, node.right)
+	}
 }
 
 func TestCircularQueue(t *testing.T) {
