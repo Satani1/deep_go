@@ -21,7 +21,7 @@ type Node struct {
 }
 
 func NewOrderedMap() OrderedMap {
-	return OrderedMap{} // need to implement
+	return OrderedMap{}
 }
 
 func (m *OrderedMap) Insert(key, value int) {
