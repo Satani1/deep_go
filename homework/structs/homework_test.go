@@ -12,19 +12,21 @@ type Option func(*GamePerson)
 
 func WithName(name string) func(*GamePerson) {
 	return func(person *GamePerson) {
-		// need to implement
+		copy(person.name[:], name)
 	}
 }
 
 func WithCoordinates(x, y, z int) func(*GamePerson) {
 	return func(person *GamePerson) {
-		// need to implement
+		person.x = int32(x)
+		person.y = int32(y)
+		person.z = int32(z)
 	}
 }
 
 func WithGold(gold int) func(*GamePerson) {
 	return func(person *GamePerson) {
-		// need to implement
+		person.gold = uint32(gold)
 	}
 }
 
@@ -95,37 +97,46 @@ const (
 )
 
 type GamePerson struct {
-	// need to implement
+	name           [42]byte //42
+	x, y, z        int32    //4
+	gold           uint32   //4
+	statsMask      uint32   //4
+	attributesMask uint16   //2
 }
 
 func NewGamePerson(options ...Option) GamePerson {
-	// need to implement
-	return GamePerson{}
+	person := GamePerson{}
+
+	for _, option := range options {
+		option(&person)
+	}
+
+	return person
 }
 
 func (p *GamePerson) Name() string {
-	// need to implement
-	return ""
+	n := 0
+	for n < len(p.name) && p.name[n] != 0 {
+		n++
+	}
+
+	return string(p.name[:n])
 }
 
 func (p *GamePerson) X() int {
-	// need to implement
-	return 0
+	return int(p.x)
 }
 
 func (p *GamePerson) Y() int {
-	// need to implement
-	return 0
+	return int(p.y)
 }
 
 func (p *GamePerson) Z() int {
-	// need to implement
-	return 0
+	return int(p.z)
 }
 
 func (p *GamePerson) Gold() int {
-	// need to implement
-	return 0
+	return int(p.gold)
 }
 
 func (p *GamePerson) Mana() int {
