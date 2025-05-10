@@ -13,7 +13,6 @@ import (
 type COWBuffer struct {
 	data []byte
 	refs *int
-	// need to implement
 }
 
 func NewCOWBuffer(data []byte) COWBuffer {
@@ -33,7 +32,7 @@ func NewCOWBuffer(data []byte) COWBuffer {
 func (b *COWBuffer) Clone() COWBuffer {
 	*b.refs++
 
-	return *b // need to implement
+	return *b
 }
 
 func (b *COWBuffer) Close() {
