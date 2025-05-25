@@ -53,11 +53,14 @@ func (m *OrderedMap) deleteNode(key int, node *Node, size int) *Node {
 	if node == nil {
 		return nil
 	}
+
 	switch {
 	case key < node.key:
 		node.left = m.deleteNode(key, node.left, m.size)
+
 	case key > node.key:
 		node.right = m.deleteNode(key, node.right, m.size)
+
 	default:
 		m.size--
 		if node.left == nil {
@@ -76,6 +79,7 @@ func (m *OrderedMap) deleteNode(key int, node *Node, size int) *Node {
 
 		node.right = m.deleteNode(succ.key, node.right, m.size)
 	}
+
 	return node
 }
 
