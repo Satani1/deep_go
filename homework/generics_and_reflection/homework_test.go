@@ -9,6 +9,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// go test -v homework_test.go
+
 type Person struct {
 	Name    string `properties:"name"`
 	Address string `properties:"address,omitempty"`
