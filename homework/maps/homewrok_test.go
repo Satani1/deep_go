@@ -46,20 +46,20 @@ func (m *OrderedMap) insert(key, value int, node *Node) *Node {
 	return node
 }
 func (m *OrderedMap) Erase(key int) {
-	m.root = m.deleteNode(key, m.root, m.size)
+	m.root = m.deleteNode(key, m.root)
 }
 
-func (m *OrderedMap) deleteNode(key int, node *Node, size int) *Node {
+func (m *OrderedMap) deleteNode(key int, node *Node) *Node {
 	if node == nil {
 		return nil
 	}
 
 	switch {
 	case key < node.key:
-		node.left = m.deleteNode(key, node.left, m.size)
+		node.left = m.deleteNode(key, node.left)
 
 	case key > node.key:
-		node.right = m.deleteNode(key, node.right, m.size)
+		node.right = m.deleteNode(key, node.right)
 
 	default:
 		m.size--
@@ -77,7 +77,7 @@ func (m *OrderedMap) deleteNode(key int, node *Node, size int) *Node {
 
 		node.key, node.value = succ.key, succ.value
 
-		node.right = m.deleteNode(succ.key, node.right, m.size)
+		node.right = m.deleteNode(succ.key, node.right)
 	}
 
 	return node
