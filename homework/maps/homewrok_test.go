@@ -46,45 +46,36 @@ func (m *OrderedMap) insert(key, value int, node *Node) *Node {
 	return node
 }
 func (m *OrderedMap) Erase(key int) {
-	m.root = m.deleteNode(key, m.root)
+	m.root = m.deleteNode(key, m.root, m.size)
 }
 
-func (m *OrderedMap) deleteNode(key int, node *Node) *Node {
+func (m *OrderedMap) deleteNode(key int, node *Node, size int) *Node {
 	if node == nil {
 		return nil
 	}
+	switch {
+	case key < node.key:
+		node.left = m.deleteNode(key, node.left, m.size)
+	case key > node.key:
+		node.right = m.deleteNode(key, node.right, m.size)
+	default:
+		m.size--
+		if node.left == nil {
+			return node.right
+		}
+		if node.right == nil {
+			return node.left
+		}
 
-	if key < node.key {
-		node.left = m.deleteNode(key, node.left)
+		succ := node.right
+		for succ.left != nil {
+			succ = succ.left
+		}
 
-		return node
+		node.key, node.value = succ.key, succ.value
+
+		node.right = m.deleteNode(succ.key, node.right, m.size)
 	}
-
-	if key > node.key {
-		node.right = m.deleteNode(key, node.right)
-
-		return node
-	}
-
-	m.size--
-
-	if node.left == nil {
-		return node.right
-	}
-
-	if node.right == nil {
-		return node.left
-	}
-
-	child := node.right
-	for child.left != nil {
-		child = child.left
-	}
-
-	child.left = node.left
-	child.right = node.right
-	node = child
-
 	return node
 }
 
