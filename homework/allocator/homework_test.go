@@ -20,11 +20,11 @@ func Defragment(memory []byte, pointers []unsafe.Pointer) {
 			continue
 		}
 
-		// Вычисляем разницу между местом под указателем и свободным местом в памяти.
+		// Вычисляем смещение  между фактическим и ожидаемым местом в памяти.
 		offset := int(uintptr(pointers[i]) - uintptr(currentLocation))
-		// Меняем местами значения.
+		// Меняем местами значения памяти.
 		memory[i], memory[i+offset] = memory[i+offset], memory[i]
-		// Обновляем значение указателя на новую позицию значения в памяти.
+		// Обновляем значение указателя на новую позицию.
 		pointers[i] = currentLocation
 	}
 }
