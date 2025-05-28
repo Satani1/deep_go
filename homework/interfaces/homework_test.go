@@ -19,16 +19,16 @@ type MessageService struct {
 }
 
 type Container struct {
-	dependencies map[string]interface{}
+	dependencies map[string]func() interface{}
 }
 
 func NewContainer() *Container {
 	return &Container{
-		dependencies: make(map[string]interface{}),
+		dependencies: make(map[string]func() interface{}),
 	}
 }
 
-func (c *Container) RegisterType(name string, constructor interface{}) {
+func (c *Container) RegisterType(name string, constructor func() interface{}) {
 	if _, exists := c.dependencies[name]; exists {
 		return
 	}
@@ -42,12 +42,7 @@ func (c *Container) Resolve(name string) (interface{}, error) {
 		return nil, errors.New("unknown dependecy name")
 	}
 
-	constructorFunc, ok := constructor.(func() interface{})
-	if !ok {
-		return nil, errors.New("constructor isn`t a function")
-	}
-
-	return constructorFunc(), nil
+	return constructor(), nil
 }
 
 func TestDIContainer(t *testing.T) {
