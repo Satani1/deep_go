@@ -11,7 +11,22 @@ import (
 // go test -v homework_test.go
 
 func Defragment(memory []byte, pointers []unsafe.Pointer) {
-	// need to implement
+	if len(memory) == 0 || len(pointers) == 0 {
+		return
+	}
+	for i := range pointers {
+		currentLocation := unsafe.Pointer(&memory[i])
+		if currentLocation == pointers[i] {
+			continue
+		}
+
+		// Вычисляем смещение  между фактическим и ожидаемым местом в памяти.
+		offset := int(uintptr(pointers[i]) - uintptr(currentLocation))
+		// Меняем местами значения памяти.
+		memory[i], memory[i+offset] = memory[i+offset], memory[i]
+		// Обновляем значение указателя на новую позицию.
+		pointers[i] = currentLocation
+	}
 }
 
 func TestDefragmentation(t *testing.T) {
